@@ -121,3 +121,34 @@ def ipFormatting(cel):
         return None
 
     return list_ip
+
+
+ip_list = None
+if ";" in ip:
+    ip_list = ip.split(";")
+
+    # Форматирование каждого элемента
+    for i in range(len(ip_list)):
+        ip_list[i] = ip_list[i].replace(' ', '')
+
+result = None
+if ip_list:
+    for ip in ip_list:
+        result = ipFormatting(ip)
+        if result is None:
+            continue
+
+        for clear_ip in result:
+            _createCCIpAddressCI(clear_ip)          # Частная функция, для которой чистился ip_address
+
+    if result is None:
+        raise Exception("Bad ip addresses", ip_list)
+else:
+    ip_formatted = ip.replace(' ', '')
+    result = ipFormatting(ip_formatted)
+
+    if result is None:
+        raise Exception("Bad ip address", ip_formatted)
+
+    for clear_ip in result:
+        _createCCIpAddressCI(clear_ip)              # Частная функция, для которой чистился ip_address
