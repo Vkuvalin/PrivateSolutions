@@ -2,6 +2,16 @@ import re
 import logger
 
 
+# Данное убрано за ненадобностью из основной функции.
+# Словарь, в котором считается количество одинаковых ip
+ip_addresses = dict()
+def ipAddressesAddDict(list_ip_addresses):
+    for i in list_ip_addresses:
+        ip_addresses[i] = ip_addresses.get(i, 0) + 1
+        if ip_addresses[i] > 1:
+            print('Косяк')
+
+
 def replace_char_at_index(org_str, index, replacement):
     new_str = org_str
     if index < len(org_str):
@@ -19,6 +29,26 @@ def ip_address_debug_dot(string_ip):
     for i in range(len(list_of_indexes)):
         if i != 0:
             string_ip = replace_char_at_index(string_ip, list_of_indexes[i] - i, '')
+        else:
+            string_ip = replace_char_at_index(string_ip, list_of_indexes[i], '')
+
+    return string_ip
+
+
+# Эта функция одноразовая (для одного "случая"). Пока не стал делать универсальной
+def ip_address_debug_bracket(string_ip):
+    list_of_indexes = []
+
+    for i in range(len(string_ip) - 1):
+        if (string_ip[i].isdigit() and string_ip[i + 1] == "(") or (string_ip[i].isdigit() and string_ip[i + 1] == ")"):
+            list_of_indexes.append(i + 1)
+
+    for i in range(len(list_of_indexes)):
+        if i != len(list_of_indexes)-1:
+            if i != 0:
+                string_ip = replace_char_at_index(string_ip, list_of_indexes[i], '/')
+            else:
+                string_ip = replace_char_at_index(string_ip, list_of_indexes[i], '/')
         else:
             string_ip = replace_char_at_index(string_ip, list_of_indexes[i], '')
 
