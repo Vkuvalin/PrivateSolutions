@@ -55,12 +55,14 @@ def ip_address_debug_bracket(string_ip):
     return string_ip
 
 
-def ipFormatting(cel):
-    cel = ip_address_debug_dot(cel)
+def ipFormatting(first_ip_string):
+
+    # Исправление ошибок заполнения по общему шаблону
+    first_ip_string = ip_address_debug_dot(first_ip_string)
 
     list_ip = []
     pattern = r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
-    result = ' '.join([i.group(0) for i in re.finditer(pattern, cel)])
+    result = ' '.join([i.group(0) for i in re.finditer(pattern, first_ip_string)])
 
     if len(result.split(' ')) > 1:
         for i in result.split(' '):
@@ -69,7 +71,7 @@ def ipFormatting(cel):
     else:
         list_ip.append(result)
 
-    ip_first_formate = cel[cel.find(result):]
+    ip_first_formate = first_ip_string[first_ip_string.find(result):]
 
     if len(result) != ip_first_formate and "-" in ip_first_formate and ip_first_formate[
         ip_first_formate.find('-') + 1].isdigit() and '/' not in ip_first_formate:
@@ -82,30 +84,30 @@ def ipFormatting(cel):
 
             return list_ip
 
-    if '/' in cel:
+    if '/' in first_ip_string:
         pattern_1 = r''
         for i in ip_first_formate:
             if i == "/":
                 pattern_1 += '\/\d{1,3}'
 
-        flag = True
+        flag_range = True
         try:
-            result_1 = [i.group(0) for i in re.finditer(pattern_1, cel)][0][1:].split('/')
+            result_1 = [i.group(0) for i in re.finditer(pattern_1, first_ip_string)][0][1:].split('/')
 
             pattern_3 = r'\/\d{1,3}\-\d{1,3}'
-            result_3 = [i.group(0) for i in re.finditer(pattern_3, cel)][0][1:].split('/') or None
+            result_3 = [i.group(0) for i in re.finditer(pattern_3, first_ip_string)][0][1:].split('/') or None
             if result_3 and len(result_3) == len(result_1):
                 pass
             else:
-                flag = False
+                flag_range = False
 
         except Exception as e:
-            logger.debug(cel)
+            logger.debug(first_ip_string)
             logger.debug("WARNING-1: ", e)
             pass
 
         if len(result) != ip_first_formate and "-" in ip_first_formate and ip_first_formate[
-            ip_first_formate.find('-') + 1].isdigit() and flag:
+            ip_first_formate.find('-') + 1].isdigit() and flag_range:
             list_nums = ip_first_formate[ip_first_formate.find('-') + 1:].split('/')
 
             for i in list_nums:
@@ -130,7 +132,7 @@ def ipFormatting(cel):
                 result_2[3] = i
                 list_ip.append('.'.join(result_2))
         except Exception as e:
-            logger.debug(cel)
+            logger.debug(first_ip_string)
             logger.debug("WARNING-2: ", e)
             pass
 
