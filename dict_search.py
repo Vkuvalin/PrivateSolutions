@@ -30,7 +30,7 @@ def dictionary_search(dictionary, path, sep=None):
         raise ValueError('Неподходящие ключ словаря. Работает только с str, float, int.')
     return dict_local
 
-
+# Пример
 dictionary = {1:"Влад", 2:{2.2: "Андрей", 2.4: "Дима"}}
 test = dictionary_search(dictionary, "2-2.2", "-")
 print(test) # Выведет "Андрей"
